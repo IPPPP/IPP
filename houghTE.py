@@ -2,7 +2,6 @@
 # encoding: utf-8
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 from numpy import *
 
 from PIL import Image, ImageDraw
@@ -50,23 +49,6 @@ def preprocess(im0):
     im[:,:,1]=0
     im[:,:,2]=0 
     return im1
-
-
-# img=Image.open("t8_1024x600.jpg")
-# #img = cv2.imread('t8_1024x600.jpg') 
-# edges=array(preprocess(img)>50,dtype=uint8)
-# img=array(img)
-# #open to see how to use: cv2.Canny
-# #http://blog.csdn.net/on2way/article/details/46851451 
-# #hough transform
-# print edges
-# lines = cv2.HoughLinesP(edges,1,np.pi/180,160,minLineLength=100,maxLineGap=15)
-# lines1 = lines[:,0,:]
-# print lines1
-# for x1,y1,x2,y2 in lines1[:]: 
-#     cv2.line(img,(x1,y1),(x2,y2),(255,0,0),1)
-
-
 
 
 def denoise(im,U_init,tolerance=0.1,tau=0.125,tv_weight=100):
@@ -160,8 +142,6 @@ print L1
 #  ......
 
 ###########
-
-
 
 
 

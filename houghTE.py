@@ -7,7 +7,6 @@ from numpy import *
 from PIL import Image, ImageDraw
 from time import clock
 
-
 def histeq(im,nbr_bins=256):
     imhist,bins = histogram(im.flatten(),nbr_bins,normed=True)
     cdf = imhist.cumsum()
@@ -111,74 +110,65 @@ gray = cv2.GaussianBlur(gray, (5,5), 15, 5)
 # edges=cv2.Laplacian(gray,cv2.CV_16S,ksize=3)
 # edges=array(edges,dtype=uint8)
 edges = cv2.Canny(gray,10,100)
-imPIL= Image.fromarray(np.uint8(edges))
-imPIL.show()
+
+#imPIL= Image.fromarray(np.uint8(edges))
+#imPIL.show()
+
 #hough transform
 lines = cv2.HoughLines(edges,1,np.pi/190,houghPa)
-lines1 = array(lines[:,0,:],dtype=float)
 
+L_horizontal=[] ## list of almost horizontal lines in form (a,b,c) of ax+by=c
+L_vertical=[] ## list of almost vertical lines in form (a,b,c) of ax+by=c
 
-print lines1
-a=np.cos(lines1[:,1])
-b=np.sin(lines1[:,1])
-x0=a*lines1[:,0]
-y0=b*lines1[:,0]
-x1 = x0 + 1000*(-b)
-y1 = y0 + 1000*(a)
-x2 = x0 - 1000*(-b)
-y2 = y0 - 1000*(a) 
-L1=line([x1,y1],[x2,y2])
-print L1
+for rho,theta in lines[0]: 
+    a = np.cos(theta)
+    b = np.sin(theta)
+    x0 = a*rho
+    y0 = b*rho
+    x1 = x0 + 1000*(-b)
+    y1 = y0 + 1000*(a)
+    x2 = x0 - 1000*(-b)
+    y2 = y0 - 1000*(a)
 
-#########
-## How to calculate all the intersections of the detected lines
-## and find the largest possible square.
-## QAQ
+    L_tmp = line([x1,y1],[x2,y2])
+    if L_tmp[1]==0:
+        L_vertical.append(L_tmp)
+    else:
+        ratio = -L_tmp[0]/L_tmp[1]
+        if ratio > 1 or ratio < -1:
+            L_vertical.append(L_tmp)
+        else:
+            L_horizontal.append(L_tmp)
 
-#     L1=line([x1,y1],[x2,y2])
-#     L2=line()
-#     R=intersection(L1,L2)
-#     if R & R in w,h range
-#  ......
+## find two lines with the longest distance in vertical/horizonal lines
+max = -100000
+min = 100000
+for L in L_horizontal:  ## set x=0, find max and min y
+    y = L[2]/L[1]
+    if y > max:
+        max = y
+        L_horizontal_max = L
+    if y < min:
+        min = y
+        L_horizontal_min = L
 
-###########
+max = -100000
+min = 100000
+for L in L_vertical:  ## set y=0, find max and min x
+    x = L[2]/L[0]
+    if x > max:
+        max = x
+        L_vertical_max = L
+    if x < min:
+        min = x
+        L_vertical_min = L
 
-
-
-
-
-
-# for rho,theta in lines1[:]: 
-#     a = np.cos(theta)
-#     b = np.sin(theta)
-#     x0 = a*rho
-#     y0 = b*rho
-#     x1 = int(x0 + 1000*(-b))
-#     y1 = int(y0 + 1000*(a))
-#     x2 = int(x0 - 1000*(-b))
-#     y2 = int(y0 - 1000*(a)) 
-
-#     L1=line([x1,y1],[x2,y2])
-#     L2=line()
-#     R=intersection(L1,L2)
-#     if R
-
-#     cv2.line(img,(x1,y1),(x2,y2),(255,0,0),1)
-
-
-
+x1,y1 = intersection(L_vertical_min, L_horizontal_max)
+x2,y2 = intersection(L_vertical_min, L_horizontal_min)
+x3,y3 = intersection(L_vertical_max, L_horizontal_min)
+x4,y4 = intersection(L_vertical_max, L_horizontal_max)
+cv2.line(img,(int(x1),int(y1)),(int(x2),int(y2)),(255,0,0),1)
+cv2.line(img,(int(x2),int(y2)),(int(x3),int(y3)),(255,0,0),1)
+cv2.line(img,(int(x3),int(y3)),(int(x4),int(y4)),(255,0,0),1)
+cv2.line(img,(int(x4),int(y4)),(int(x1),int(y1)),(255,0,0),1)
 cv2.imwrite("test1.jpg",img)
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -120,7 +120,7 @@ lines = cv2.HoughLines(edges,1,np.pi/190,houghPa)
 L_horizontal=[] ## list of almost horizontal lines in form (a,b,c) of ax+by=c
 L_vertical=[] ## list of almost vertical lines in form (a,b,c) of ax+by=c
 
-for rho,theta in lines[0]: 
+for rho,theta in lines[:,0]: 
     a = np.cos(theta)
     b = np.sin(theta)
     x0 = a*rho

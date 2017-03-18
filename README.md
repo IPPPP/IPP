@@ -1,5 +1,5 @@
-# IPP
-Download training set and test set from QQ group first;
-Then download model02.rar, unzip it;
-Install all the support libs;
-Run predict.py;
+# Digital Recognition Based on Pytorch Framework
+
+Updated with a 6-layer CNN model that can recognize digital Captcha with test accuracy over 98%.
+
+The SVM model with Hough transform is for general digital detection.

@@ -1,4 +1,4 @@
-# Digital Recognition Based on Pytorch Framework
+# Digital Recognition based on Pytorch Framework
 
 Updated with a 6-layer CNN model that can recognize digital Captcha with test accuracy over 98%.
 

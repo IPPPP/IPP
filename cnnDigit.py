@@ -18,7 +18,7 @@ parser.add_argument('--batch-size', type=int, default=16, metavar='N',
                     help='input batch size for training (default: 64)')
 parser.add_argument('--test-batch-size', type=int, default=1000, metavar='N',
                     help='input batch size for testing (default: 1000)')
-parser.add_argument('--epochs', type=int, default=15, metavar='N',
+parser.add_argument('--epochs', type=int, default=20, metavar='N',
                     help='number of epochs to train (default: 10)')
 parser.add_argument('--lr', type=float, default=0.001, metavar='LR',
                     help='learning rate (default: 0.01)')
@@ -136,7 +136,7 @@ if args.cuda:
     model.cuda()
 
 optimizer = optim.SGD(model.parameters(), lr=args.lr, 
-                        momentum=args.momentum, weight_decay=0.00001)
+                        momentum=args.momentum, weight_decay=0.0005)
 
 def train(epoch):
     model.train()
@@ -188,7 +188,10 @@ for epoch in range(1, args.epochs + 1):
     CurveX.append(epoch)
     trainCurveY.append(train_loss)
     accCurveY.append(test_accuracy)
- 
+    
+torch.save(model.state_dict(), 'modelSD.pt')
+torch.save(model, 'model.pt')
+
 X=np.array(CurveX)
 Y1=np.array(trainCurveY)
 Y2=np.array(accCurveY)
@@ -215,7 +218,6 @@ for i in xrange(6):
     ax.imshow(np.array(filters[i]))
 plt.show()
 
-torch.save(model, 'model.pt')
 ####################################
 
 

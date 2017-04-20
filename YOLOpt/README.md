@@ -1,1 +1,1 @@
-A YOLO implementation based on Pytorch framework.
+A YOLO implementation modified for digit recognition.
